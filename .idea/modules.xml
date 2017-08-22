@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/blossom5.iml" filepath="$PROJECT_DIR$/blossom5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/blossom.iml" filepath="$PROJECT_DIR$/blossom.iml" />
     </modules>
   </component>
 </project>
