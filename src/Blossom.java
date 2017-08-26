@@ -1044,7 +1044,6 @@ public class Blossom {
                     delta = Math.max(0, mindualvar);
                 }
 
-
                 // Update dual variables according to delta.
                 for (int v = 0; v < nvertex; v++) {
                     if (label[inblossom[v]] == 1) {
