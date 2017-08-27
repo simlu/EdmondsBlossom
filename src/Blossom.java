@@ -10,6 +10,7 @@ public class Blossom {
     private static final boolean CHECK_DELTA = false;
     private static final boolean CHECK_OPTIMUM = false;
     private static final boolean DEBUG = false;
+    private static final Tracker tracker = null;
 
     private final int[][] edges;
     private final boolean maxcardinality;
@@ -265,6 +266,9 @@ public class Blossom {
     // and record the fact that w was reached through the edge with
     // remote endpoint p.
     private void assignLabel(int w, int t, int p) {
+        if (tracker != null) {
+            tracker.start();
+        }
         if (DEBUG) {
             System.out.println("assignLabel(" + w + "," + t + "," + p + ")");
         }
@@ -287,6 +291,9 @@ public class Blossom {
             assert mate[base] >= 0;
             assignLabel(endpoint[mate[base]], 1, mate[base] ^ 1);
         }
+        if (tracker != null) {
+            tracker.end();
+        }
     }
 
     // Trace back from vertices v and w to discover either a new blossom
@@ -294,6 +301,9 @@ public class Blossom {
     private int scanBlossom(int v, int w) {
         if (DEBUG) {
             System.out.println("scanBlossom(" + v + "," + w + ")");
+        }
+        if (tracker != null) {
+            tracker.start();
         }
         // Trace back from v and w, placing breadcrumbs as we go.
         IntArrayList path = new IntArrayList();
@@ -332,6 +342,9 @@ public class Blossom {
         for (int b : path) {
             label[b] = 1;
         }
+        if (tracker != null) {
+            tracker.end();
+        }
         // Return base vertex, if we found one.
         return base;
     }
@@ -340,6 +353,9 @@ public class Blossom {
     // connects a pair of S vertices. Label the new blossom as S; set its dual
     // variable to zero; relabel its T-vertices to S and add them to the queue.
     private void addBlossom(int base, int k) {
+        if (tracker != null) {
+            tracker.start();
+        }
         int v = edges[k][0];
         int w = edges[k][1];
         int bb = inblossom[base];
@@ -457,12 +473,18 @@ public class Blossom {
         if (DEBUG) {
             System.out.println("blossomchilds[" + b + "]=" + blossomchilds[b]);
         }
+        if (tracker != null) {
+            tracker.end();
+        }
     }
 
     // Expand the given top-level blossom.
     private void expandBlossom(int b, boolean endstage) {
         if (DEBUG) {
             System.out.println("expandBlossom(" + b + "," + endstage + ") " + blossomchilds[b]);
+        }
+        if (tracker != null) {
+            tracker.start();
         }
         // Convert sub-blossoms into top-level blossoms.
         for (int s : blossomchilds[b]) {
@@ -563,6 +585,9 @@ public class Blossom {
         blossombestedges[b] = null;
         bestedge[b] = -1;
         unusedblossoms.add(b);
+        if (tracker != null) {
+            tracker.end();
+        }
     }
 
     // Swap matched/unmatched edges over an alternating path through blossom b
@@ -570,6 +595,9 @@ public class Blossom {
     private void augmentBlossom(int b, int v) {
         if (DEBUG) {
             System.out.println("augmentBlossom(" + b + "," + v + ")");
+        }
+        if (tracker != null) {
+            tracker.start();
         }
         // Bubble up through the blossom tree from vertex v to an immediate
         // sub-blossom of b.
@@ -627,12 +655,18 @@ public class Blossom {
         blossomendps[b].removeElements(0, i);
         blossombase[b] = blossombase[blossomchilds[b].getInt(0)];
         assert blossombase[b] == v;
+        if (tracker != null) {
+            tracker.end();
+        }
     }
 
     // Swap matched/unmatched edges over an alternating path between two
     // single vertices. The augmenting path runs through edge k, which
     // connects a pair of S vertices.
     private void augmentMatching(int k) {
+        if (tracker != null) {
+            tracker.start();
+        }
         int v = edges[k][0];
         int w = edges[k][1];
         if (DEBUG) {
@@ -681,6 +715,9 @@ public class Blossom {
                     System.out.println("PAIR " + s + " " + t + "(k=" + (p / 2) + ")");
                 }
             }
+        }
+        if (tracker != null) {
+            tracker.end();
         }
     }
 
@@ -1127,6 +1164,10 @@ public class Blossom {
         }
         for (int v = 0; v < nvertex; v++) {
             assert mate[v] == -1 || mate[mate[v]] == v;
+        }
+
+        if (tracker != null) {
+            System.out.println(tracker);
         }
 
         return mate;
