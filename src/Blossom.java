@@ -267,7 +267,7 @@ public class Blossom {
     // remote endpoint p.
     private void assignLabel(int w, int t, int p) {
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:assignLabel");
         }
         if (DEBUG) {
             System.out.println("assignLabel(" + w + "," + t + "," + p + ")");
@@ -303,7 +303,7 @@ public class Blossom {
             System.out.println("scanBlossom(" + v + "," + w + ")");
         }
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:scanBlossom");
         }
         // Trace back from v and w, placing breadcrumbs as we go.
         IntArrayList path = new IntArrayList();
@@ -354,7 +354,7 @@ public class Blossom {
     // variable to zero; relabel its T-vertices to S and add them to the queue.
     private void addBlossom(int base, int k) {
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:addBlossom");
         }
         int v = edges[k][0];
         int w = edges[k][1];
@@ -484,7 +484,7 @@ public class Blossom {
             System.out.println("expandBlossom(" + b + "," + endstage + ") " + blossomchilds[b]);
         }
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:expandBlossom");
         }
         // Convert sub-blossoms into top-level blossoms.
         for (int s : blossomchilds[b]) {
@@ -597,7 +597,7 @@ public class Blossom {
             System.out.println("augmentBlossom(" + b + "," + v + ")");
         }
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:augmentBlossom");
         }
         // Bubble up through the blossom tree from vertex v to an immediate
         // sub-blossom of b.
@@ -665,7 +665,7 @@ public class Blossom {
     // connects a pair of S vertices.
     private void augmentMatching(int k) {
         if (tracker != null) {
-            tracker.start();
+            tracker.start("func:augmentMatching");
         }
         int v = edges[k][0];
         int w = edges[k][1];
@@ -928,6 +928,9 @@ public class Blossom {
                     System.out.println("SUBSTAGE");
                 }
 
+                if (tracker != null) {
+                    tracker.start("labelling");
+                }
                 // Continue labeling until all vertices which are reachable
                 // through an alternating path have got a label.
                 while (!queue.isEmpty() && augmented == 0) {
@@ -1004,6 +1007,9 @@ public class Blossom {
                         }
                     }
                 }
+                if (tracker != null) {
+                    tracker.end();
+                }
 
                 if (augmented != 0) {
                     break;
@@ -1032,6 +1038,9 @@ public class Blossom {
                     }
                 }
 
+                if (tracker != null) {
+                    tracker.start("delta2");
+                }
                 // Compute delta2: the minimum slack on any edge between
                 // an S-vertex and a free vertex.
                 for (int v = 0; v < nvertex; v++) {
@@ -1044,7 +1053,13 @@ public class Blossom {
                         }
                     }
                 }
+                if (tracker != null) {
+                    tracker.end();
+                }
 
+                if (tracker != null) {
+                    tracker.start("delta3");
+                }
                 // Compute delta3: half the minimum slack on any edge between
                 // a pair of S-blossoms.
                 for (int b = 0; b < 2 * nvertex; b++) {
@@ -1058,7 +1073,13 @@ public class Blossom {
                         }
                     }
                 }
+                if (tracker != null) {
+                    tracker.end();
+                }
 
+                if (tracker != null) {
+                    tracker.start("delta4");
+                }
                 // Compute delta4: minimum z variable of any T-blossom.
                 for (int b = nvertex; b < 2 * nvertex; b++) {
                     if (blossombase[b] >= 0 && blossomparent[b] == -1 && label[b] == 2 && (deltatype == -1 || dualvar[b] < delta)) {
@@ -1066,6 +1087,9 @@ public class Blossom {
                         deltatype = 4;
                         deltablossom = b;
                     }
+                }
+                if (tracker != null) {
+                    tracker.end();
                 }
 
                 if (deltatype == -1) {
@@ -1081,6 +1105,9 @@ public class Blossom {
                     delta = Math.max(0, mindualvar);
                 }
 
+                if (tracker != null) {
+                    tracker.start("update_dual");
+                }
                 // Update dual variables according to delta.
                 for (int v = 0; v < nvertex; v++) {
                     if (label[inblossom[v]] == 1) {
@@ -1101,6 +1128,9 @@ public class Blossom {
                             dualvar[b] -= delta;
                         }
                     }
+                }
+                if (tracker != null) {
+                    tracker.end();
                 }
 
                 // Take action at the point where minimum delta occurred.

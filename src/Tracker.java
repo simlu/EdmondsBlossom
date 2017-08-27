@@ -11,8 +11,7 @@ public class Tracker {
     private LongArrayList timeStack = new LongArrayList();
     private Object2ObjectOpenHashMap<String, int[]> stats = new Object2ObjectOpenHashMap<>();
 
-    public final void start() {
-        String func = Thread.currentThread().getStackTrace()[2].getMethodName();
+    public final void start(String func) {
         if (!stats.containsKey(func)) {
             stats.put(func, new int[2]);
         }
