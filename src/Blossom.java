@@ -239,12 +239,22 @@ public class Blossom {
 
     // Return 2 * slack of edge k (does not work inside blossoms).
     private long slack(int k) {
+        if (tracker != null) {
+            tracker.start("func:slack");
+        }
         int[] edge = edges[k];
-        return dualvar[edge[0]] + dualvar[edge[1]] - 2L * edge[2];
+        long result = dualvar[edge[0]] + dualvar[edge[1]] - 2L * edge[2];
+        if (tracker != null) {
+            tracker.end();
+        }
+        return result;
     }
 
     // Generate the leaf vertices of a blossom.
     private IntArrayList blossomLeaves(int b) {
+        if (tracker != null) {
+            tracker.start("func:blossomLeaves");
+        }
         IntArrayList result = new IntArrayList();
         if (b < nvertex) {
             result.add(b);
@@ -258,6 +268,9 @@ public class Blossom {
                     }
                 }
             }
+        }
+        if (tracker != null) {
+            tracker.end();
         }
         return result;
     }
